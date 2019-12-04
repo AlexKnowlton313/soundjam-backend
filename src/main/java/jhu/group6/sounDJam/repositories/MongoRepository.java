@@ -69,15 +69,6 @@ public class MongoRepository {
         return removeOneFromCollectionById(collection, id.toString());
     }
 
-    public long removeOneFromCollectionBySessionId(CollectionNames collection, String id) {
-        MongoCollection c = db.getCollection(collection.toString());
-        return c.deleteOne(eq("sessionId", id)).getDeletedCount();
-    }
-
-    public long removeOneFromCollectionBySessionId(CollectionNames collection, UUID id) {
-        return removeOneFromCollectionBySessionId(collection, id.toString());
-    }
-
     public long removeAllFromCollectionById(CollectionNames collection, String id) {
         MongoCollection c = db.getCollection(collection.toString());
         return c.deleteMany(eq("sessionId", id)).getDeletedCount();

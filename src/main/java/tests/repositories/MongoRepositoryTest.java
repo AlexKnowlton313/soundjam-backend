@@ -2,6 +2,7 @@ package tests.repositories;
 
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
+import jhu.group6.sounDJam.models.User;
 import jhu.group6.sounDJam.repositories.MongoRepository;
 import jhu.group6.sounDJam.utils.CollectionNames;
 import org.bson.Document;
@@ -13,6 +14,13 @@ import org.junit.Test;
 
 import java.util.List;
 import java.util.UUID;
+
+/**
+ * To run these tests, ensure mongoDB is running locally on port 27017:
+ *
+ *  mongod --config /usr/local/etc/mongod.conf --fork
+ *
+ */
 
 public class MongoRepositoryTest {
     private static String DATABASE_NAME = "test";
@@ -163,6 +171,34 @@ public class MongoRepositoryTest {
         assertEquals(repository.findOneFromCollectionBySessionId(CollectionNames.MONGO_TESTING, id).getString("name"), updated.getString("name"));
         assertEquals(repository.findOneFromCollectionBySessionId(CollectionNames.MONGO_TESTING, id).getString("sessionId"), updated.getString("sessionId"));
         assertEquals(repository.findAllFromCollectionBySessionId(CollectionNames.MONGO_TESTING, id).size(), 2);
+    }
+
+    @Test
+    public void updateUserTest() {
+        var userId = UUID.randomUUID();
+        var user = User.builder().userId(userId).build().toDocument();
+        var updatedUser = User.builder().userId(userId).nickname("new").build().toDocument();
+        var searchParams = new Document("nickname", "new");
+
+        repository.insertIntoCollection(CollectionNames.USER, user);
+        assertTrue(repository.updateUser(updatedUser));
+
+        assertEquals(repository.findOneFromCollection(CollectionNames.USER, searchParams).getString("nickname"), "new");
+        assertEquals(1, repository.removeOneFromCollectionById(CollectionNames.USER, userId), 0);
+    }
+
+    @Test
+    public void purgeAllBySessionTest() {
+        var id = UUID.randomUUID().toString();
+        var doc = new Document("name", "test").append("sessionId", id);
+
+        repository.insertIntoCollection(CollectionNames.USER, doc);
+        repository.insertIntoCollection(CollectionNames.SESSION, doc);
+        repository.insertIntoCollection(CollectionNames.QUEUE, doc);
+        repository.insertIntoCollection(CollectionNames.SETTING, doc);
+        repository.insertIntoCollection(CollectionNames.MONGO_TESTING, doc);
+
+        assertEquals(5, repository.purgeAllBySessionId(id), 0);
     }
 
     @After
