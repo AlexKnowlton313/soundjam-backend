@@ -4,7 +4,6 @@ import jhu.group6.sounDJam.models.Session;
 import jhu.group6.sounDJam.models.Song;
 import org.bson.Document;
 import org.junit.Test;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -16,13 +15,12 @@ import java.util.UUID;
 
 import static java.util.stream.Collectors.toList;
 import static org.junit.Assert.*;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.powermock.api.mockito.PowerMockito.when;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({Session.class, Song.class})
+@PrepareForTest({Song.class})
 public class SessionTest {
     private String name = "sessionName";
     private UUID djId = UUID.randomUUID();
@@ -41,11 +39,6 @@ public class SessionTest {
         var songDocument = new Document();
         var songMock = mock(Song.class);
         when(songMock.toDocument()).thenReturn(songDocument);
-
-        mockStatic(UUID.class);
-        when(UUID.randomUUID())
-                .thenReturn(sessionId)
-                .thenReturn(state);
 
         var sessionDocFull = Session.builder()
                 .sessionId(sessionId)
@@ -79,11 +72,9 @@ public class SessionTest {
         assertEquals(sessionDocFull.get("lastUpdated"), lastUpdated);
         assertEquals(currentSongDoc, songDocument);
 
-        when(UUID.randomUUID())
-                .thenReturn(sessionId)
-                .thenReturn(state);
-
         var sessionDocEmpty = Session.builder()
+                .sessionId(sessionId)
+                .state(state)
                 .build()
                 .toDocument();
 
@@ -108,20 +99,6 @@ public class SessionTest {
 
         mockStatic(Song.class);
         when(Song.fromDocument(songDocument)).thenReturn(songMock);
-
-        mockStatic(UUID.class);
-        when(UUID.randomUUID())
-                .thenReturn(sessionId)
-                .thenReturn(state);
-
-        when(UUID.fromString(any(String.class)))
-                .thenReturn(sessionId)
-                .thenReturn(state)
-                .thenReturn(djId)
-                .thenReturn(settingId)
-                .thenReturn(queueId)
-                .thenReturn(partierIds.get(0))
-                .thenReturn(partierIds.get(1));
 
         var sessionDocFull = Session.builder()
                 .sessionId(sessionId)
@@ -155,17 +132,6 @@ public class SessionTest {
 
         when(songMock.toDocument()).thenReturn(songDocument);
         when(Song.fromDocument(songDocument)).thenReturn(songMock);
-        when(UUID.randomUUID())
-                .thenReturn(sessionId)
-                .thenReturn(state);
-        when(UUID.fromString(any(String.class)))
-                .thenReturn(sessionId)
-                .thenReturn(state)
-                .thenReturn(djId)
-                .thenReturn(settingId)
-                .thenReturn(queueId)
-                .thenReturn(partierIds.get(0))
-                .thenReturn(partierIds.get(1));
 
         var sessionDocEmpty = Session.builder()
                 .build()
@@ -181,17 +147,12 @@ public class SessionTest {
         assertNull(sessionEmpty.getRefreshToken());
         assertNull(sessionEmpty.getCurrentSong());
         assertEquals(sessionEmpty.getPartierIds(), new ArrayList<>());
-        assertEquals(sessionEmpty.getSessionId(), sessionId);
-        assertEquals(sessionEmpty.getState(), state);
         assertEquals(sessionEmpty.getLastUpdated(), 0);
     }
 
     @Test
     public void testGetSetSessionId() {
-        mockStatic(UUID.class);
-        when(UUID.randomUUID()).thenReturn(sessionId);
-
-        var session = Session.builder().build();
+        var session = Session.builder().sessionId(sessionId).build();
         assertEquals(sessionId, session.getSessionId());
         session.setSessionId(state);
         assertEquals(state, session.getSessionId());
@@ -265,10 +226,7 @@ public class SessionTest {
 
     @Test
     public void testGetSetState() {
-        mockStatic(UUID.class);
-        when(UUID.randomUUID()).thenReturn(sessionId).thenReturn(state);
-
-        var session = Session.builder().build();
+        var session = Session.builder().state(state).build();
         assertEquals(state, session.getState());
         session.setState(djId);
         assertEquals(djId, session.getState());

@@ -2,21 +2,12 @@ package tests.models;
 
 import jhu.group6.sounDJam.models.User;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.util.UUID;
 
 import static org.junit.Assert.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.powermock.api.mockito.PowerMockito.mockStatic;
-import static org.powermock.api.mockito.PowerMockito.when;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({ User.class })
 public class UserTest {
-    private UUID userId = UUID.randomUUID();
     private UUID sessionId = UUID.randomUUID();
     private String nickname = "debugging";
     private int numSongsAdded = 20;
@@ -42,9 +33,6 @@ public class UserTest {
 
     @Test
     public void testToDocument() {
-        mockStatic(UUID.class);
-        when(UUID.randomUUID()).thenReturn(userId);
-
         var userFull = User.builder()
                 .nickname(nickname)
                 .sessionId(sessionId)
@@ -57,9 +45,12 @@ public class UserTest {
         assertEquals(userFull.get("sessionId"), sessionId.toString());
         assertEquals(userFull.get("numSongsAdded"), numSongsAdded);
         assertEquals(userFull.get("numBoos"), numBoos);
-        assertEquals(userFull.get("userId"), userId.toString());
 
-        when(UUID.randomUUID()).thenReturn(userId);
+        try {
+            UUID.fromString((String) userFull.get("userId"));
+        } catch (Exception e) {
+            fail();
+        }
 
         var userEmpty = User.builder()
                 .build()
@@ -69,15 +60,16 @@ public class UserTest {
         assertNull(userEmpty.get("sessionId"));
         assertEquals(userEmpty.get("numSongsAdded"), 0);
         assertEquals(userEmpty.get("numBoos"), 0);
-        assertEquals(userEmpty.get("userId"), userId.toString());
+
+        try {
+            UUID.fromString((String) userEmpty.get("userId"));
+        } catch (Exception e) {
+            fail();
+        }
     }
 
     @Test
     public void testFromDocument() {
-        mockStatic(UUID.class);
-        when(UUID.randomUUID()).thenReturn(userId);
-        when(UUID.fromString(any(String.class))).thenReturn(userId).thenReturn(sessionId);
-
         var userFull = User.builder()
                 .nickname(nickname)
                 .sessionId(sessionId)
@@ -88,14 +80,14 @@ public class UserTest {
 
         var userDocFull = User.fromDocument(userFull);
 
-        assertEquals(userDocFull.getUserId(), userId);
         assertEquals(userDocFull.getNumSongsAdded(), numSongsAdded);
         assertEquals(userDocFull.getNumBoos(), numBoos);
         assertEquals(userDocFull.getSessionId(), sessionId);
         assertEquals(userDocFull.getNickname(), nickname);
 
-        when(UUID.randomUUID()).thenReturn(userId);
-        when(UUID.fromString(any(String.class))).thenReturn(userId);
+        if (userDocFull.getUserId() == null) {
+            fail();
+        }
 
         var userEmpty = User.builder()
                 .build()
@@ -103,7 +95,10 @@ public class UserTest {
 
         var userDocEmpty = User.fromDocument(userEmpty);
 
-        assertEquals(userDocEmpty.getUserId(), userId);
+        if (userDocEmpty.getUserId() == null) {
+            fail();
+        }
+
         assertEquals(userDocEmpty.getNumSongsAdded(), 0);
         assertEquals(userDocEmpty.getNumBoos(), 0);
         assertNull(userDocEmpty.getSessionId());
@@ -128,11 +123,12 @@ public class UserTest {
 
     @Test
     public void testGetSetUserId() {
-        mockStatic(UUID.class);
-        when(UUID.randomUUID()).thenReturn(userId);
-
         var user = User.builder().build();
-        assertEquals(userId, user.getUserId());
+
+        if (user.getUserId() == null) {
+            fail();
+        }
+
         user.setUserId(sessionId);
         assertEquals(sessionId, user.getUserId());
     }

@@ -1,22 +1,13 @@
 package tests.models;
 
 import jhu.group6.sounDJam.models.Setting;
-import jhu.group6.sounDJam.models.User;
 import org.junit.Test;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.runner.RunWith;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.util.*;
 
 import static org.junit.Assert.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.powermock.api.mockito.PowerMockito.mockStatic;
-import static org.powermock.api.mockito.PowerMockito.when;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({ Setting.class })
 public class SettingTest {
     private UUID settingId = UUID.randomUUID();
     private UUID sessionId = UUID.randomUUID();
@@ -42,9 +33,6 @@ public class SettingTest {
 
     @Test
     public void toDocument() {
-        mockStatic(UUID.class);
-        when(UUID.randomUUID()).thenReturn(settingId);
-
         var settingDocFull = Setting.builder()
             .settingId(settingId)
             .anarchyMode(true)
@@ -78,9 +66,8 @@ public class SettingTest {
         assertEquals(settingDocFull.get("explicitAllowed"), false);
         assertEquals(settingDocFull.get("sessionId"), sessionId.toString());
 
-        when(UUID.randomUUID()).thenReturn(settingId);
-
         var settingDocEmpty = Setting.builder()
+                .settingId(settingId)
                 .build()
                 .toDocument();
 
@@ -103,11 +90,6 @@ public class SettingTest {
 
     @Test
     public void fromDocument() {
-        mockStatic(UUID.class);
-        when(UUID.randomUUID()).thenReturn(settingId);
-        when(UUID.fromString(any(String.class)))
-                .thenReturn(settingId)
-                .thenReturn(sessionId);
 
         var settingDocFull = Setting.builder()
                 .settingId(settingId)
@@ -143,18 +125,15 @@ public class SettingTest {
         assertFalse(settingFull.isExplicitAllowed());
         assertEquals(settingFull.getSessionId(), sessionId);
 
-        when(UUID.randomUUID()).thenReturn(settingId);
-        when(UUID.fromString(any(String.class)))
-                .thenReturn(settingId)
-                .thenReturn(sessionId);
-
         var settingDocEmpty = Setting.builder()
+                .settingId(settingId)
                 .build()
                 .toDocument();
 
         var settingEmpty = Setting.fromDocument(settingDocEmpty);
 
         assertEquals(settingEmpty.getSettingId(), settingId);
+        assertNull(settingEmpty.getSessionId());
         assertFalse(settingEmpty.isAnarchyMode());
         assertEquals(settingEmpty.getBlacklist(), new ArrayList<>());
         assertEquals(settingEmpty.getMaxSongLength(), 600);
@@ -167,7 +146,6 @@ public class SettingTest {
         assertTrue(settingEmpty.getMinSongLength() < settingEmpty.getMaxSongLength());
         assertEquals(settingEmpty.getPreferredGenres(), new ArrayList<>());
         assertTrue(settingEmpty.isExplicitAllowed());
-        assertNull(settingEmpty.getSessionId());
     }
 
     @Test
@@ -181,10 +159,7 @@ public class SettingTest {
 
     @Test
     public void testGetSetSettingId() {
-        mockStatic(UUID.class);
-        when(UUID.randomUUID()).thenReturn(settingId);
-
-        var setting = Setting.builder().build();
+        var setting = Setting.builder().settingId(settingId).build();
         assertEquals(settingId, setting.getSettingId());
         setting.setSettingId(sessionId);
         assertEquals(sessionId, setting.getSettingId());
