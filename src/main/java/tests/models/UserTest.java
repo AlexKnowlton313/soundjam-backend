@@ -1,7 +1,6 @@
 package tests.models;
 
 import jhu.group6.sounDJam.models.User;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -15,20 +14,13 @@ import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.powermock.api.mockito.PowerMockito.when;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest(User.class)
+@PrepareForTest({ User.class })
 public class UserTest {
-    private UUID userId = UUID.fromString("098ade23-807f-12e9-6183-c9a862e9a86b");
-    private UUID sessionId = UUID.fromString("098ade23-807f-12e9-6183-a1d836c3b37e");
-    private String nickname = "nickname";
-    private int numSongsAdded = 100;
-    private int numBoos = 40;
-
-    @Before
-    public void Before() {
-        mockStatic(UUID.class);
-        when(UUID.randomUUID()).thenReturn(userId);
-        when(UUID.fromString(any(String.class))).thenReturn(userId).thenReturn(sessionId);
-    }
+    private UUID userId = UUID.randomUUID();
+    private UUID sessionId = UUID.randomUUID();
+    private String nickname = "debugging";
+    private int numSongsAdded = 20;
+    private int numBoos = 11;
 
     @Test
     public void testIncrementNumSongsAdded() {
@@ -50,6 +42,9 @@ public class UserTest {
 
     @Test
     public void testToDocument() {
+        mockStatic(UUID.class);
+        when(UUID.randomUUID()).thenReturn(userId);
+
         var userFull = User.builder()
                 .nickname(nickname)
                 .sessionId(sessionId)
@@ -65,7 +60,6 @@ public class UserTest {
         assertEquals(userFull.get("userId"), userId.toString());
 
         when(UUID.randomUUID()).thenReturn(userId);
-        when(UUID.fromString(any(String.class))).thenReturn(userId);
 
         var userEmpty = User.builder()
                 .build()
@@ -80,6 +74,10 @@ public class UserTest {
 
     @Test
     public void testFromDocument() {
+        mockStatic(UUID.class);
+        when(UUID.randomUUID()).thenReturn(userId);
+        when(UUID.fromString(any(String.class))).thenReturn(userId).thenReturn(sessionId);
+
         var userFull = User.builder()
                 .nickname(nickname)
                 .sessionId(sessionId)
@@ -130,6 +128,9 @@ public class UserTest {
 
     @Test
     public void testGetSetUserId() {
+        mockStatic(UUID.class);
+        when(UUID.randomUUID()).thenReturn(userId);
+
         var user = User.builder().build();
         assertEquals(userId, user.getUserId());
         user.setUserId(sessionId);
