@@ -4,10 +4,6 @@ public class MathUtil {
 
     private static double epsilon = .0001;
 
-    public static double sigmoid(double x, double alpha) {
-        return 1 / (1 + Math.exp(-1 * alpha * x));
-    }
-
     public static double crossEntropy(double[] dist1, double[] dist2) {
         double sum = 0.0;
 
@@ -40,23 +36,6 @@ public class MathUtil {
         }
 
         return scores;
-    }
-
-    public static double normalCDF(double z_score) {
-        //Taylor Series Approximation of Gaussian CDF
-        double sum = 0.0;
-        for (int n = 0; n < 6; n++) {
-            double numerator = Math.pow(-1, n);
-            double factorial = 1;
-            for (int i = 1; i <= n; i++) {
-                factorial *= i;
-            }
-            double denominator = factorial * Math.pow(2, n) * (2*n + 1);
-            double z_term = Math.pow(z_score, 2*n + 1);
-            sum += (numerator / denominator) * z_term;
-        }
-
-        return (1 / Math.sqrt(2*Math.PI)) * sum + 0.5;
     }
 
 }
