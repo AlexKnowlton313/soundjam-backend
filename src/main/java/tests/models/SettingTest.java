@@ -1,6 +1,7 @@
 package tests.models;
 
 import jhu.group6.sounDJam.models.Setting;
+import jhu.group6.sounDJam.models.User;
 import org.junit.Test;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.runner.RunWith;
@@ -179,62 +180,127 @@ public class SettingTest {
     }
 
     @Test
-    public void setSettingId() {
+    public void testGetSetSettingId() {
+        mockStatic(UUID.class);
+        when(UUID.randomUUID()).thenReturn(settingId);
+
+        var setting = Setting.builder().build();
+        assertEquals(settingId, setting.getSettingId());
+        setting.setSettingId(sessionId);
+        assertEquals(sessionId, setting.getSettingId());
     }
 
     @Test
-    public void setMaxSongLength() {
+    public void testGetSetMaxSongLength() {
+        var setting = Setting.builder().build();
+        assertEquals(maxSongLength, setting.getMaxSongLength());
+        setting.setMaxSongLength(900);
+        assertEquals(900, setting.getMaxSongLength());
     }
 
     @Test
-    public void setMinSongLength() {
+    public void testGetSetMinSongLength() {
+        var setting = Setting.builder().build();
+        assertEquals(minSongLength, setting.getMinSongLength());
+        setting.setMinSongLength(100);
+        assertEquals(100, setting.getMinSongLength());
     }
 
     @Test
-    public void setMaxUserCanAdd() {
+    public void testGetSetMaxUserCanAdd() {
+        var setting = Setting.builder().build();
+        assertEquals(10, setting.getMaxUserCanAdd());
+        setting.setMaxUserCanAdd(900);
+        assertEquals(900, setting.getMaxUserCanAdd());
     }
 
     @Test
-    public void setMaxTempo() {
+    public void testGetSetMaxTempo() {
+        var setting = Setting.builder().build();
+        assertEquals(240, setting.getMaxTempo(), 0);
+        setting.setMaxTempo(600);
+        assertEquals(600, setting.getMaxTempo(), 0);
     }
 
     @Test
-    public void setMinTempo() {
+    public void testGetSetMinTempo() {
+        var setting = Setting.builder().build();
+        assertEquals(40, setting.getMinTempo(), 0);
+        setting.setMinTempo(10);
+        assertEquals(10, setting.getMinTempo(), 0);
     }
 
     @Test
-    public void setAnarchyMode() {
+    public void testGetSetAnarchyMode() {
+        var setting = Setting.builder().build();
+        assertFalse(setting.isAnarchyMode());
+        setting.setAnarchyMode(true);
+        assertTrue(setting.isAnarchyMode());
     }
 
     @Test
-    public void setPreferredGenres() {
+    public void testGetSetPreferredGenres() {
+        var setting = Setting.builder().build();
+        assertEquals(new ArrayList<>(), setting.getPreferredGenres());
+        setting.setPreferredGenres(Collections.singletonList("test"));
+        assertEquals(Collections.singletonList("test"), setting.getPreferredGenres());
     }
 
     @Test
-    public void setBlacklist() {
+    public void testGetSetBlacklist() {
+        var setting = Setting.builder().build();
+        assertEquals(new ArrayList<>(), setting.getBlacklist());
+        setting.setBlacklist(Collections.singletonList("test"));
+        assertEquals(Collections.singletonList("test"), setting.getBlacklist());
     }
 
     @Test
-    public void setExplicitAllowed() {
+    public void testGetSetExplicitAllowed() {
+        var setting = Setting.builder().build();
+        assertTrue(setting.isExplicitAllowed());
+        setting.setExplicitAllowed(false);
+        assertFalse(setting.isExplicitAllowed());
     }
 
     @Test
-    public void setDanceability() {
+    public void testGetSetDanceability() {
+        var setting = Setting.builder().build();
+        assertEquals(.5, setting.getDanceability(), 0);
+        setting.setDanceability(10);
+        assertEquals(10, setting.getDanceability(), 0);
     }
 
     @Test
-    public void setEnergy() {
+    public void testGetSetEnergy() {
+        var setting = Setting.builder().build();
+        assertEquals(.5, setting.getEnergy(), 0);
+        setting.setEnergy(10);
+        assertEquals(10, setting.getEnergy(), 0);
     }
 
     @Test
-    public void setValence() {
+    public void testGetSetValence() {
+        var setting = Setting.builder().build();
+        assertEquals(.5, setting.getValence(), 0);
+        setting.setValence(10);
+        assertEquals(10, setting.getValence(), 0);
     }
 
     @Test
-    public void setTempo() {
+    public void testGetSetTempo() {
+        var setting = Setting.builder().build();
+        assertEquals(120.0, setting.getTempo(), 0);
+        setting.setTempo(10);
+        assertEquals(10, setting.getTempo(), 0);
     }
 
     @Test
-    public void setSessionId() {
+    public void testGetSetSessionId() {
+        var setting = Setting.builder()
+                .sessionId(sessionId)
+                .build();
+        assertEquals(sessionId, setting.getSessionId());
+        setting.setSettingId(settingId); // this should do nothing
+        assertEquals(sessionId, setting.getSessionId());
     }
 }

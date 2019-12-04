@@ -105,8 +105,8 @@ public class Queue {
         var playedSongIds = doc.get("playedSongIds") == null ? new ArrayList<String>() : (List<String>) doc.get("playedSongIds", List.class);
         var songsDocs = doc.get("songs") == null ? new ArrayList<Document>() : (List<Document>) doc.get("songs", List.class);
         var songs = songsDocs == null ? null : songsDocs.stream().map(Song::fromDocument).collect(toList());
-        var minTime = doc.get("minTime") == null ? -1 : doc.getLong("minTime");
-        var maxTime = doc.get("maxTime") == null ? -1 : doc.getLong("maxTime");
+        var minTime = doc.get("minTime") == null ? (long) -1 : doc.getLong("minTime");
+        var maxTime = doc.get("maxTime") == null ? (long) -1 : doc.getLong("maxTime");
 
         return Queue.builder()
                 .queueId(queueId)
