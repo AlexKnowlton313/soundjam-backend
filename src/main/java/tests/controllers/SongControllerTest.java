@@ -29,7 +29,7 @@ import static org.mockito.Mockito.when;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({Server.class, Song.class})
+@PrepareForTest({Server.class})
 public class SongControllerTest {
 
     @Test(expected = BadRequestResponse.class)

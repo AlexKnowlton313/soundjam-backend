@@ -39,7 +39,7 @@ public class ValidUserHandlerTest {
         ValidUserHandler.ensureValidUserForSession(contextMock);
     }
 
-    @Test(expected = NotValidUserException.class)
+    f@Test(expected = NotValidUserException.class)
     public void testEnsureValidUserForSessionNotValidUser() throws Exception {
         var userId = UUID.randomUUID();
 
