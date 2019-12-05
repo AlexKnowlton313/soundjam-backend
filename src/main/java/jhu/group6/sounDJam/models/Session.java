@@ -54,7 +54,7 @@ public class Session {
         var queueId = doc.get("queueId") == null ? null : UUID.fromString(doc.getString("queueId"));
         var accessToken = doc.get("accessToken") == null ? null : doc.getString("accessToken");
         var refreshToken = doc.get("refreshToken") == null ? null : doc.getString("refreshToken");
-        var lastUpdated = doc.get("lastUpdated") == null ? 0 : doc.getLong("lastUpdated");
+        var lastUpdated = doc.get("lastUpdated") == null ? (long) 0 : doc.getLong("lastUpdated");
 
         List<UUID> partierIds = partierIdDocs == null ? new ArrayList<>() : partierIdDocs.stream().map(UUID::fromString).collect(toList());
         var currentSong = currentSongDoc == null ? null : Song.fromDocument(currentSongDoc);

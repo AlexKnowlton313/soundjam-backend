@@ -222,24 +222,6 @@ public class Song {
         return boos / ((numPartiers+1) * songsAdded);
     }
 
-    public double durationScoreGaussian(Setting setting) {
-        double max = setting.getMaxSongLength();
-        double min = setting.getMinSongLength();
-        double x = this.getDuration();
-
-        double mu = max - ((max - min) / 2);
-        double sigma = (max - min) / 4; //we treat min and max as being +or- 2sigma
-
-        //normalizes to a z-score
-        double z = -1 * Math.abs((x - mu) / sigma); //forces CDF to (0, .5] range
-        if (z < -2.0) {
-            return 0.0; //if song is more than 2sigma away from mean, it scores a 0.
-        }
-
-        //since score is forced to be (0, .5], we multiply by 2
-        return MathUtil.normalCDF(z) * 2;
-    }
-
 
     public double durationScore(Setting setting) {
         double max = setting.getMaxSongLength();
