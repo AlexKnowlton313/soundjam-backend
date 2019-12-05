@@ -37,11 +37,11 @@ public class SongRecommendationLimiter {
         }
     }
 
-    public static boolean isSongBlacklisted(Song song, Setting setting) {
+    private static boolean isSongBlacklisted(Song song, Setting setting) {
         return setting.getBlacklist().contains(song.getArtist());
     }
 
-    public static boolean isUserUnderSongLimit(User user, Setting setting, Queue queue) {
+    private static boolean isUserUnderSongLimit(User user, Setting setting, Queue queue) {
         var numSongsAddedPastHour = queue.getNumSongsAddedPastHourForUser(user);
         var limit = setting.getMaxUserCanAdd();
 

@@ -40,7 +40,7 @@ public class QueueTest {
     @Test
     public void testRecommendSongNewSong() throws Exception {
         mockStatic(UserController.class);
-        doNothing().when(UserController.class, "incrementNumSongsAdded", any());
+        PowerMockito.doNothing().when(UserController.class, "incrementNumSongsAdded", any());
 
         var userMock = mock(User.class);
         var songMock = mock(Song.class);

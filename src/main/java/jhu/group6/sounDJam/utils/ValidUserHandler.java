@@ -57,7 +57,7 @@ public class ValidUserHandler {
         return partiers.contains(user.getUserId().toString());
     }
 
-    static boolean isUserDJForSession(User user, Session session) {
+    public static boolean isUserDJForSession(User user, Session session) {
         return session.getDjId().toString().equals(user.getUserId().toString());
     }
 }
