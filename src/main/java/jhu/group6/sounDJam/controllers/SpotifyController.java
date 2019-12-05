@@ -1,6 +1,7 @@
 package jhu.group6.sounDJam.controllers;
 
 import com.google.gson.JsonArray;
+import com.google.gson.Gson;
 import com.wrapper.spotify.SpotifyApi;
 import com.wrapper.spotify.SpotifyHttpManager;
 import com.wrapper.spotify.exceptions.SpotifyWebApiException;
@@ -35,8 +36,8 @@ import static jhu.group6.sounDJam.controllers.SettingController.getSettingFromId
 
 public class SpotifyController {
     private static final String spotifyAuthURL = "https://accounts.spotify.com/api/token";
-    private static final String spotifyClientId = "131af97324d6493db62ba458950081c6";
-    private static final String spotifyClientSecret = "3b87177ab7eb4edc96f0e4f1b445f569";
+    private static final String spotifyClientId = "ae0185648d2849b8b89f06b05fe14880";
+    private static final String spotifyClientSecret = "41c748d7cef245698a41a91f00162e04";
     public static Map<String, ScheduledFuture> timers = new HashMap<>();
 
     private static SpotifyApi buildSpotifyApi(String redirectUri) {
@@ -110,7 +111,8 @@ public class SpotifyController {
     }
 
     public static void onLoginSuccess(Context ctx) {
-        ctx.result("This window will close momentarily");
+        var ids = new String[] {ctx.queryParam("djId"), ctx.queryParam("sessionId")};
+        ctx.json(ids);
         ctx.status(200);
     }
 
@@ -290,7 +292,6 @@ public class SpotifyController {
         song = setNullSong(queue, song, spotifyApi);
         var nextSong = new JsonArray();
         nextSong.add("spotify:track:" + song.getSpotifySongId());
-
         session.setCurrentSong(song);
 
         Server.getMongoRepository().updateOneFromCollectionBySessionId(
