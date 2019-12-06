@@ -36,8 +36,8 @@ import static jhu.group6.sounDJam.controllers.SettingController.getSettingFromId
 
 public class SpotifyController {
     private static final String spotifyAuthURL = "https://accounts.spotify.com/api/token";
-    private static final String spotifyClientId = "ae0185648d2849b8b89f06b05fe14880";
-    private static final String spotifyClientSecret = "41c748d7cef245698a41a91f00162e04";
+    private static final String spotifyClientId = "99c8f855c2f84f70b91a85c0348e2024";
+    private static final String spotifyClientSecret = "4dbf38811ade43c684b1498ecad99f93";
     public static Map<String, ScheduledFuture> timers = new HashMap<>();
 
     private static SpotifyApi buildSpotifyApi(String redirectUri) {
