@@ -95,7 +95,7 @@ public class SpotifyController {
         }
     }
 
-    static AudioFeatures getAudioFeaturesFromSongId(Context ctx, String songId) {
+    public static AudioFeatures getAudioFeaturesFromSongId(Context ctx, String songId) {
         var session = getSessionFromContext(ctx);
         var redirectUri = getRedirectUri(ctx);
         var spotifyApi = buildSpotifyApi(redirectUri);;

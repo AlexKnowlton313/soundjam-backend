@@ -113,7 +113,7 @@ public class QueueController {
     public static Queue getQueueFromContext(Context context) {
         if (context.sessionAttribute("queue") == null) {
             var sessionId = context.pathParam("session-id");
-            context.sessionAttribute("queue",getQueueFromId(sessionId));
+            context.sessionAttribute("queue", getQueueFromId(sessionId));
         }
 
         return context.sessionAttribute("queue");
@@ -136,13 +136,6 @@ public class QueueController {
 
         Map<Song, ArrayList<Map.Entry<Song, Double>>> graph = createGraph(queue.getSongs(), setting);
         Song currentSong = queue.getSongs().get(0);
-        ArrayList<Song> orderedList = parseGraph(graph, currentSong);
-//        for(Song s : orderedList) {
-//            System.out.println(s.getName() + " score " + s.getScore());
-//            System.out.println(s.getName() + " Dancabiliiity " + s.getDanceability());
-//            System.out.println(s.getName() + " energy " + s.getEnergy());
-//            System.out.println(s.getName() + " Happiness " + s.getValence());
-//        }
         Map<String, ArrayList<Map.Entry<String, Double>>> jsonGraph = createStringGraph(graph, currentSong.getName());
         context.json(jsonGraph);
         context.status(200);

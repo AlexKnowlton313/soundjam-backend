@@ -233,4 +233,17 @@ public class SettingControllerTest {
 
         assertEquals(ret, settingMock);
     }
+
+    @Test(expected = InvalidSessionIdException.class)
+    public void getSettingFromIdNull() {
+        PowerMockito.mockStatic(Server.class);
+        PowerMockito.mockStatic(Setting.class);
+
+        var mongoMock = mock(MongoRepository.class);
+
+        PowerMockito.when(Server.getMongoRepository()).thenReturn(mongoMock);
+        when(mongoMock.findOneFromCollectionBySessionId(any(), anyString())).thenReturn(null);
+
+        var ret = SettingController.getSettingFromId("test");
+    }
 }
