@@ -49,7 +49,7 @@ public class SpotifyController {
                 .build();
     }
 
-    static String getRedirectUri(Context ctx) {
+    public static String getRedirectUri(Context ctx) {
         var host = ctx.host();
         return getRedirectUriFromHost(host);
     }
@@ -149,7 +149,7 @@ public class SpotifyController {
         return playNextSong(session, redirectUri);
     }
 
-    static Song playNextSong(Session session, String redirectUri) throws IOException, SpotifyWebApiException, InterruptedException {
+    public static Song playNextSong(Session session, String redirectUri) throws IOException, SpotifyWebApiException, InterruptedException {
         var queue = QueueController.getQueueFromId(session.getSessionId().toString());
         var song = queue.popNextSong();
         var spotifyApi = SpotifyController.buildSpotifyApi(redirectUri);
@@ -362,7 +362,7 @@ public class SpotifyController {
         context.status(200);
     }
 
-    static AuthorizationCodeCredentials swapAccessTokenForSession(String sessionId, String redirectUri) {
+    public static AuthorizationCodeCredentials swapAccessTokenForSession(String sessionId, String redirectUri) {
         try {
             var session = getSessionFromId(sessionId);
             var spotifyApi = buildSpotifyApi(redirectUri);

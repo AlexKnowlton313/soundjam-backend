@@ -45,7 +45,7 @@ public class SessionController {
         db.insertIntoCollection(CollectionNames.QUEUE, queue.toDocument());
 
         ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-        scheduler.scheduleAtFixedRate(() -> {
+        scheduler.scheduleAtFixedRate(() -> { // counldnt figure out how to test :(
             var currSession = getSessionFromId(session.getSessionId().toString());
             if (System.currentTimeMillis() - currSession.getLastUpdated() > 1800000) {
                 Server.getMongoRepository().purgeAllBySessionId(session.getSessionId().toString());
